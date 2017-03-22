@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.cloudcord.views.activities.AddEditAlarmActivity"
+    tools:showIn="@layout/activity_add_edit_alarm">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/etsound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_marginTop="10dp"
+            android:cursorVisible="false"
+            android:focusableInTouchMode="false"
+            android:drawableRight="@android:drawable/ic_menu_edit"
+            android:hint="Select Sound" />
+
+        <EditText
+            android:id="@+id/etdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:cursorVisible="false"
+            android:focusableInTouchMode="false"
+            android:hint="Select Date" />
+
+        <EditText
+            android:id="@+id/ettime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:cursorVisible="false"
+            android:focusableInTouchMode="false"
+            android:hint="Select Time" />
+
+        <EditText
+            android:id="@+id/etrepetition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:cursorVisible="false"
+            android:focusableInTouchMode="false"
+            android:hint="Does not repeat" />
+
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

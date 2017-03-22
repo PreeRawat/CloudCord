@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:src="@android:drawable/ic_input_add"/>
+
+        <TextView
+            android:layout_toRightOf="@id/clock"
+            android:id="@+id/time"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10:00"/>
+
+        <TextView
+            android:id="@+id/ampm"
+            android:layout_toRightOf="@id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:padding="10dp"
+            android:text="am"/>
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_toRightOf="@id/ampm"
+            android:layout_width="wrap_content"
+            android:padding="10dp"
+            android:layout_height="wrap_content"
+            android:text="March 24"/>
+
+        <Switch
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:padding="10dp"
+            android:layout_height="wrap_content"
+            />
+
+        <ImageView
+            android:id="@+id/sound"
+            android:layout_below="@id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:src="@android:drawable/ic_media_play"/>
+
+        <TextView
+            android:layout_toRightOf="@id/sound"
+            android:id="@+id/sound_name"
+            android:layout_below="@id/clock"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:text="Water Fountain"/>
+
+        <TextView
+            android:id="@+id/repetition"
+            android:layout_below="@id/sound"
+            android:layout_toRightOf="@id/sound"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:text="Does not Repeat"/>
+
+        <TextView
+            android:layout_toRightOf="@id/sound"
+            android:id="@+id/title"
+            android:layout_below="@id/repetition"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:text="Title"/>
+
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_below="@id/repetition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@android:color/transparent"
+            android:src="@android:drawable/ic_menu_delete"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
