@@ -3,14 +3,15 @@ package com.cloudcord.views.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.cloudcord.CloudCordApplication;
 import com.cloudcord.R;
+import com.cloudcord.datamodals.localrepo.AlarmDataSource;
 import com.cloudcord.presenters.AlarmContract;
 import com.cloudcord.presenters.AlarmPresenter;
 import com.cloudcord.utils.ActivityUtils;
@@ -19,6 +20,7 @@ import com.cloudcord.views.fragments.AlarmActivityFragment;
 public class AlarmActivity extends AppCompatActivity {
 
     public AlarmContract.Presenter mPresenter;
+    AlarmDataSource mAlarmDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,9 @@ public class AlarmActivity extends AppCompatActivity {
                     getSupportFragmentManager(), alarmActivityFragment, R.id.contentFrame);
         }
 
-        mPresenter = new AlarmPresenter(this, alarmActivityFragment);
+        mAlarmDataSource = CloudCordApplication.getDatabaseInstance();
+
+        mPresenter = new AlarmPresenter(this, alarmActivityFragment, mAlarmDataSource);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +80,7 @@ public class AlarmActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == AlarmPresenter.RESULT_CODE_ADDEDIT && resultCode == RESULT_OK){
-
+            mPresenter.refreshList();
         }
 
     }

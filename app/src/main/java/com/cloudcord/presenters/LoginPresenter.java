@@ -1,3 +1,4 @@
+
 package com.cloudcord.presenters;
 
 import android.accounts.Account;
@@ -26,6 +27,7 @@ import java.io.IOException;
 /**
  * Created by root on 21/3/17.
  */
+
 
 public class LoginPresenter implements LoginContract.Presenter {
 
@@ -194,3 +196,4 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
 }
+

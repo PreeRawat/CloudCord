@@ -19,6 +19,8 @@ public interface AlarmContract {
     }
     interface Presenter extends BasePresenter {
 
+        void refreshList();
+
         void navigateToAddEditAlarm();
 
         void performSoundCloudLogin();
