@@ -52,7 +52,7 @@ public interface AlarmDataSource {
 
     void saveAlarms(@NonNull Alarms alarm);
 
-    void completeAlarms(@NonNull Alarms alarm);
+    /*void completeAlarms(@NonNull Alarms alarm);
 
     void completeAlarms(@NonNull String alarmId);
 
@@ -60,7 +60,7 @@ public interface AlarmDataSource {
 
     void activateAlarms(@NonNull String alarmId);
 
-    void clearCompletedAlarms();
+    void clearCompletedAlarms();*/
 
     void refreshAlarms();
 

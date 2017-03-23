@@ -1,33 +1,50 @@
 package com.cloudcord.views.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.cloudcord.CloudCordApplication;
 import com.cloudcord.R;
+import com.cloudcord.datamodals.localrepo.AlarmDataSource;
+import com.cloudcord.datamodals.localrepo.AlarmLocalDataSource;
 import com.cloudcord.presenters.AddEditAlarmContract;
 import com.cloudcord.presenters.AddEditAlarmPresenter;
 import com.cloudcord.utils.DateTimePickers;
 import com.cloudcord.utils.Interactor;
 
 
-public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAlarmContract.View, Interactor{
+public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAlarmContract.View, Interactor {
 
-    Interactor mInteractor;
+
     AddEditAlarmContract.Presenter mPresenter;
     String mTime;
     String mDate;
     EditText date, time, sound;
+    Spinner mSpRepitition;
+
+    AlarmDataSource alarmDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_alarm);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("");
 
-        mPresenter = new AddEditAlarmPresenter(this, this);
+        alarmDataSource = CloudCordApplication.getDatabaseInstance();
+        mPresenter = new AddEditAlarmPresenter(this, this, alarmDataSource);
 
 
         final EditText title = (EditText) findViewById(R.id.ettitle);
@@ -37,6 +54,7 @@ public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAl
             @Override
             public void onClick(View v) {
                 // TODO: 22/3/17 open file explorer for music
+                mPresenter.pickMediaFile();
             }
         });
 
@@ -56,15 +74,31 @@ public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAl
             }
         });
 
+        mSpRepitition = (Spinner) findViewById(R.id.sp_repetition);
+        mSpRepitition.setAdapter(mPresenter.setDataToSpinner());
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                mPresenter.saveAlarm(title.getText().toString(), mDate, mTime);
+                String selectedRepitition = (String) mSpRepitition.getSelectedItem();
+                mPresenter.saveAlarm( 0, title.getText().toString(), date.getText().toString(), time.getText().toString(), selectedRepitition, sound.getText().toString());
+
             }
         });
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     public void showTimePickerDialog() {
@@ -79,13 +113,13 @@ public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAl
 
     @Override
     public void setPresenter(AddEditAlarmContract.Presenter presenter) {
-        if(presenter != null)
+        if (presenter != null)
             mPresenter = presenter;
     }
 
     @Override
     public void getTime(int hour, int minute) {
-        if(!(hour==0 && minute==0)) {
+        if (!(hour == 0 && minute == 0)) {
             this.mTime = hour + ":" + minute;
             time.setText(mTime);
         } else time.setText("");
@@ -94,11 +128,28 @@ public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAl
 
     @Override
     public void getDate(int year, int month, int day) {
-        if(!(year==0 && month==0 && day==0)) {
+        if (!(year == 0 && month == 0 && day == 0)) {
             this.mDate = year + "-" + month + "-" + day;
             date.setText(mDate);
         } else date.setText("");
     }
 
 
+    @Override
+    public void showEmptyAlarmError() {
+        Snackbar.make(mSpRepitition, "Cannot set an empty alarm", Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showAlarmsList() {
+        setResult(Activity.RESULT_OK);
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == AddEditAlarmPresenter.PICKFILE_REQUEST_CODE && resultCode == RESULT_OK)
+            sound.setText(data.getDataString());
+    }
 }

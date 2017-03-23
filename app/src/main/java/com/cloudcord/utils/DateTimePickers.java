@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -97,4 +99,50 @@ public class DateTimePickers {
             mInteractor.getDate(0, 0, 0);
         }
     }
+
+    /*public static class CustomRepetitionDialog extends DialogFragment {
+
+        public Interactor mInteractor;
+
+        @Override
+        public void onAttach(Context context) {
+            super.onAttach(context);
+            try {
+                this.mInteractor = (Interactor) context;
+            } catch (final ClassCastException e) {
+                throw new ClassCastException(context.toString() + " must implement Interactor");
+            }
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(inflater.inflate(R.layout.dialog_signin, null))
+                    // Add action buttons
+                    .setPositiveButton(R.string.signin, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            // sign in the user ...
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            LoginDialogFragment.this.getDialog().cancel();
+                        }
+                    });
+            return builder.create();
+        }
+
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            super.onCancel(dialog);
+            mInteractor.getDate(0, 0, 0);
+        }
+    }*/
 }

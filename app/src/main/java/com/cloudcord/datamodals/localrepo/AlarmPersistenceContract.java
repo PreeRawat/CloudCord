@@ -29,10 +29,13 @@ public final class AlarmPersistenceContract {
 
     /* Inner class that defines the table contents */
     public static abstract class AlarmEntry implements BaseColumns {
+
         public static final String TABLE_NAME = "alarms";
         public static final String COLUMN_NAME_ENTRY_ID = "id";
         public static final String COLUMN_NAME_TITLE = "title";
-        public static final String COLUMN_NAME_DESCRIPTION = "description";
-        public static final String COLUMN_NAME_COMPLETED = "completed";
+        public static final String COLUMN_NAME_DATE = "startdate";
+        public static final String COLUMN_NAME_TIME = "time";
+        public static final String COLUMN_NAME_REPETITION = "repetition";
+        public static final String COLUMN_NAME_SOUNDPATH = "soundpath";
     }
 }

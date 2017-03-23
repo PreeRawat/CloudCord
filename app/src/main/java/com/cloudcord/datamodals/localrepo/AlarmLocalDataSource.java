@@ -47,8 +47,10 @@ public class AlarmLocalDataSource implements AlarmDataSource {
         String[] projection = {
                 AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID,
                 AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TITLE,
-                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DESCRIPTION,
-                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_COMPLETED
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DATE,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TIME,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH
         };
 
         Cursor c = db.query(
@@ -56,13 +58,15 @@ public class AlarmLocalDataSource implements AlarmDataSource {
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
-                String itemId = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID));
+                int id = c.getInt(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID));
                 String title = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TITLE));
-                String description =
-                        c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DESCRIPTION));
-                boolean completed =
-                        c.getInt(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_COMPLETED)) == 1;
-                Alarms alarm = new Alarms(title, description, itemId, completed);
+                String date =
+                        c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DATE));
+                String time = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TIME));
+                String repetition = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION));
+                String soundPath = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH));
+
+                Alarms alarm = new Alarms(id, title, date, time, repetition, soundPath);
                 alarms.add(alarm);
             }
         }
@@ -88,8 +92,10 @@ public class AlarmLocalDataSource implements AlarmDataSource {
         String[] projection = {
                 AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID,
                 AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TITLE,
-                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DESCRIPTION,
-                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_COMPLETED
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DATE,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TIME,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH
         };
 
         String selection = AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
@@ -102,13 +108,15 @@ public class AlarmLocalDataSource implements AlarmDataSource {
 
         if (c != null && c.getCount() > 0) {
             c.moveToFirst();
-            String itemId = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID));
+            int id = c.getInt(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID));
             String title = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TITLE));
-            String description =
-                    c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DESCRIPTION));
-            boolean completed =
-                    c.getInt(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_COMPLETED)) == 1;
-            alarm = new Alarms(title, description, itemId, completed);
+            String date =
+                    c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DATE));
+            String time = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TIME));
+            String repetition = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION));
+            String soundPath = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH));
+
+            alarm = new Alarms(id, title, date, time, repetition, soundPath);
         }
         if (c != null) {
             c.close();
@@ -129,10 +137,14 @@ public class AlarmLocalDataSource implements AlarmDataSource {
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
             ContentValues values = new ContentValues();
-            values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID, alarm.getmId());
+            if(alarm.getmId()!=0)
+                values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID, alarm.getmId());
+
             values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TITLE, alarm.getmTitle());
-            values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DESCRIPTION, alarm.getmDescription());
-            values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_COMPLETED, alarm.ismIsRepetitive());
+            values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DATE, alarm.getmDate());
+            values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TIME, alarm.getmTime());
+            values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION, alarm.getmRepetition());
+            values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH, alarm.getmSoundPath());
 
             db.insert(AlarmPersistenceContract.AlarmEntry.TABLE_NAME, null, values);
 
@@ -140,7 +152,7 @@ public class AlarmLocalDataSource implements AlarmDataSource {
         }
     }
 
-    @Override
+/*    @Override
     public void completeAlarms(@NonNull Alarms alarm) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -174,9 +186,9 @@ public class AlarmLocalDataSource implements AlarmDataSource {
         db.update(AlarmPersistenceContract.AlarmEntry.TABLE_NAME, values, selection, selectionArgs);
 
         db.close();
-    }
+    }*/
 
-    @Override
+/*    @Override
     public void activateAlarms(@NonNull String taskId) {
         // Not required for the local data source because the {@link TasksRepository} handles
         // converting from a {@code taskId} to a {@link task} using its cached data.
@@ -192,7 +204,7 @@ public class AlarmLocalDataSource implements AlarmDataSource {
         db.delete(AlarmPersistenceContract.AlarmEntry.TABLE_NAME, selection, selectionArgs);
 
         db.close();
-    }
+    }*/
 
     @Override
     public void refreshAlarms() {

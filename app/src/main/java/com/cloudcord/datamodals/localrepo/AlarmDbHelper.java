@@ -27,17 +27,21 @@ public class AlarmDbHelper extends SQLiteOpenHelper {
 
     private static final String TEXT_TYPE = " TEXT";
 
+    private static final String INT_TYPE = " INTEGER";
+
     private static final String BOOLEAN_TYPE = " INTEGER";
 
     private static final String COMMA_SEP = ",";
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + AlarmPersistenceContract.AlarmEntry.TABLE_NAME + " (" +
-                    AlarmPersistenceContract.AlarmEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    AlarmPersistenceContract.AlarmEntry._ID + INT_TYPE + " PRIMARY KEY AUTOINCREMENT," +
                     AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-                    AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-                    AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE +
+                    AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DATE + TEXT_TYPE + COMMA_SEP +
+                    AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TIME + TEXT_TYPE + COMMA_SEP +
+                    AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION + TEXT_TYPE + COMMA_SEP +
+                    AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH + TEXT_TYPE +
             " )";
 
     public AlarmDbHelper(Context context) {

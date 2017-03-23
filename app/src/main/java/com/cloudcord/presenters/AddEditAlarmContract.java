@@ -1,5 +1,7 @@
 package com.cloudcord.presenters;
 
+import android.widget.ArrayAdapter;
+
 import com.cloudcord.BasePresenter;
 import com.cloudcord.BaseView;
 
@@ -9,12 +11,17 @@ import com.cloudcord.BaseView;
 
 public interface AddEditAlarmContract {
 
-    interface View extends BaseView<Presenter>{
-
+    interface View extends BaseView<Presenter> {
+        void showEmptyAlarmError();
+        void showAlarmsList();
     }
 
-    interface Presenter extends BasePresenter{
-        void saveAlarm(String title, String date, String time);
+    interface Presenter extends BasePresenter {
+        void saveAlarm(int id, String title, String date, String time, String repetition, String soundPath);
+
+        void pickMediaFile();
+
+        ArrayAdapter setDataToSpinner();
     }
 
 }
