@@ -19,6 +19,8 @@ public interface AlarmContract {
     }
     interface Presenter extends BasePresenter {
 
+        void navigateToAddEditAlarm();
+
         void performSoundCloudLogin();
 
         Dialog openDialog(int id, Bundle data);

@@ -1,8 +1,10 @@
 package com.cloudcord.presenters;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.cloudcord.views.activities.AddEditAlarmActivity;
 import com.cloudcord.views.activities.AlarmActivity;
 import com.cloudcord.views.fragments.AlarmActivityFragment;
 
@@ -15,6 +17,8 @@ public class AlarmPresenter implements AlarmContract.Presenter {
     AlarmActivity mAlarmActivity;
     AlarmContract.View mAlarmActivityFragment;
 
+    public static final int RESULT_CODE_ADDEDIT = 20;
+
 
     public AlarmPresenter(AlarmActivity alarmActivity, AlarmActivityFragment alarmActivityFragment) {
         this.mAlarmActivity = alarmActivity;
@@ -24,6 +28,11 @@ public class AlarmPresenter implements AlarmContract.Presenter {
     @Override
     public void start() {
 
+    }
+
+    @Override
+    public void navigateToAddEditAlarm() {
+        mAlarmActivity.startActivityForResult(new Intent(mAlarmActivity, AddEditAlarmActivity.class), RESULT_CODE_ADDEDIT);
     }
 
     @Override
