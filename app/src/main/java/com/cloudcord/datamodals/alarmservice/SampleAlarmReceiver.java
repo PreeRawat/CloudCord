@@ -24,6 +24,7 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
+
 		String type = intent.getStringExtra("alertType");
 
 		Intent service = new Intent(context, SampleSchedulingService.class);
