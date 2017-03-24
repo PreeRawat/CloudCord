@@ -7,35 +7,66 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.text.format.Time;
 import android.util.Log;
 
+import com.cloudcord.datamodals.modals.Alarms;
+
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Broadcast Receiver class to send password change reminders and to send
  * notifications on a new snapshot available instance.
  */
-public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
+public class AlarmReceiver extends WakefulBroadcastReceiver {
 
-	private AlarmManager alarmMgrPassword, alarmMgrPhotoLog;
-	private PendingIntent alarmIntentPassword, alarmIntentPhotoLog;
+	private AlarmManager mAlarmManager;
+	private PendingIntent alarmIntent;
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
 
-		String type = intent.getStringExtra("alertType");
+		Alarms alarms = intent.getExtras().getParcelable("alarm");
 
-		Intent service = new Intent(context, SampleSchedulingService.class);
-		service.putExtra("alertType", type);
+		Intent service = new Intent(context, SchedulingService.class);
+		service.putExtra("alarm", alarms);
 		startWakefulService(context, service);
 	}
 
-	public void setAlarm(Context context, String notificationType) {
-		Log.i("got", "call to sample alarm receiver");
+	public void setAlarm(Context context, Alarms alarm) {
+		Log.i("got", "call to alarm receiver");
 
-		if (notificationType.equalsIgnoreCase("passwordChangeReminder")) {
+		Date date = new Date(Integer.parseInt(alarm.getmDate().split("-")[0]), Integer.parseInt(alarm.getmDate().split("-")[1]), Integer.parseInt(alarm.getmDate().split("-")[2]));
+		int hour = Integer.parseInt(alarm.getmTime().split(":")[0]);
+		int minute = Integer.parseInt(alarm.getmTime().split(":")[1]);
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(date.getYear(), date.getMonth(), date.getDate(), hour, minute );
+
+		mAlarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		Intent intent = new Intent(context, AlarmReceiver.class);
+		intent.putExtra("alarm", alarm);
+
+		alarmIntent = PendingIntent.getBroadcast(context, 0,
+				intent, 0);
+
+		mAlarmManager.set(AlarmManager.RTC_WAKEUP,
+				calendar.getTimeInMillis(), alarmIntent);
+
+		ComponentName receiver = new ComponentName(context,
+				BootReceiver.class);
+		PackageManager pm = context.getPackageManager();
+
+		pm.setComponentEnabledSetting(receiver,
+				PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+				PackageManager.DONT_KILL_APP);
+
+		/*if (notificationType.equalsIgnoreCase("passwordChangeReminder")) {
 
 			SharedPreferences sharedPref = context.getSharedPreferences(
 					"catchlook", Context.MODE_PRIVATE);
@@ -67,7 +98,7 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
 
 			alarmMgrPassword = (AlarmManager) context
 					.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(context, SampleAlarmReceiver.class);
+			Intent intent = new Intent(context, AlarmReceiver.class);
 			intent.putExtra("alertType", "PasswordReminder");
 			alarmIntentPassword = PendingIntent.getBroadcast(context, 0,
 					intent, 0);
@@ -76,7 +107,7 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
 					calendar.getTimeInMillis(), alarmIntentPassword);
 
 			ComponentName receiver = new ComponentName(context,
-					SampleBootReceiver.class);
+					BootReceiver.class);
 			PackageManager pm = context.getPackageManager();
 
 			pm.setComponentEnabledSetting(receiver,
@@ -88,7 +119,7 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
 
 			alarmMgrPhotoLog = (AlarmManager) context
 					.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(context, SampleAlarmReceiver.class);
+			Intent intent = new Intent(context, AlarmReceiver.class);
 			intent.putExtra("alertType", "PhotoLog");
 			alarmIntentPhotoLog = PendingIntent.getBroadcast(context, 0,
 					intent, 0);
@@ -97,23 +128,23 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
 					calendar.getTimeInMillis(), alarmIntentPhotoLog);
 
 			ComponentName receiver = new ComponentName(context,
-					SampleBootReceiver.class);
+					BootReceiver.class);
 			PackageManager pm = context.getPackageManager();
 
 			pm.setComponentEnabledSetting(receiver,
 					PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
 					PackageManager.DONT_KILL_APP);
-		}
+		}*/
 	}
 
 	public void cancelAlarm(Context context, String notificationType) {
 		// If the alarm has been set, cancel it.
-		if (notificationType.equalsIgnoreCase("passwordChangeReminder")) {
+		/*if (notificationType.equalsIgnoreCase("passwordChangeReminder")) {
 			if (alarmMgrPassword != null) {
 				alarmMgrPassword.cancel(alarmIntentPassword);
 			}
 			ComponentName receiver = new ComponentName(context,
-					SampleBootReceiver.class);
+					BootReceiver.class);
 			PackageManager pm = context.getPackageManager();
 
 			pm.setComponentEnabledSetting(receiver,
@@ -124,13 +155,13 @@ public class SampleAlarmReceiver extends WakefulBroadcastReceiver {
 				alarmMgrPhotoLog.cancel(alarmIntentPhotoLog);
 			}
 			ComponentName receiver = new ComponentName(context,
-					SampleBootReceiver.class);
+					BootReceiver.class);
 			PackageManager pm = context.getPackageManager();
 
 			pm.setComponentEnabledSetting(receiver,
 					PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
 					PackageManager.DONT_KILL_APP);
-		}
+		}*/
 
 	}
 

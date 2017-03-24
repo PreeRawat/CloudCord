@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.cloudcord.datamodals.modals.Alarms;
+
 /**
  * This BroadcastReceiver automatically (re)starts the alarm when the device is
  * rebooted. This receiver is set to be disabled (android:enabled="false") in the
@@ -12,15 +14,17 @@ import android.content.Intent;
  * device will not trigger this receiver.
  */
 // BEGIN_INCLUDE(autostart)
-public class SampleBootReceiver extends BroadcastReceiver {
-    SampleAlarmReceiver alarmPassword = new SampleAlarmReceiver();
-    SampleAlarmReceiver alarmNotification = new SampleAlarmReceiver();
+public class BootReceiver extends BroadcastReceiver {
+    AlarmReceiver alarm = new AlarmReceiver();
+    //AlarmReceiver alarmNotification = new AlarmReceiver();
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED"))
         {
-            alarmPassword.setAlarm(context,"PasswordReminder");
-            alarmNotification.setAlarm(context, "PhotoLog");
+            Alarms alarms = intent.getExtras().getParcelable("alarm");
+            System.out.println(" boot receiver " + alarms.getmTitle());
+            alarm.setAlarm(context, (Alarms) intent.getExtras().getParcelable("alarm"));
+            //alarmNotification.setAlarm(context, "PhotoLog");
         }
     }
 }

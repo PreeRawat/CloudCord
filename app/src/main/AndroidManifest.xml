@@ -13,6 +13,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".CloudCordApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -39,6 +40,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cloudcord.views.activities.AlarmActivity" />
         </activity>
+
+        <receiver android:name=".datamodals.alarmservice.AlarmReceiver" >
+        </receiver>
+        <receiver
+            android:name=".datamodals.alarmservice.BootReceiver"
+            android:enabled="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".datamodals.alarmservice.SchedulingService" />
+
+        <receiver android:name=".datamodals.alarmservice.SchedulingService$NotificationButton" />
     </application>
 
 </manifest>

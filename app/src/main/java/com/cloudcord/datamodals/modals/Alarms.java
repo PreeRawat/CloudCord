@@ -1,10 +1,22 @@
 package com.cloudcord.datamodals.modals;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by root on 22/3/17.
  */
 
-public class Alarms {
+public class Alarms implements Parcelable{
+
+    public Alarms(Parcel in) {
+        mId = in.readInt();
+        mTitle = in.readString();
+        mDate = in.readString();
+        mTime = in.readString();
+        mRepetition = in.readString();
+        mSoundPath = in.readString();
+    }
 
     public int getmId() {
         return mId;
@@ -78,4 +90,29 @@ public class Alarms {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mTitle);
+        dest.writeString(mDate);
+        dest.writeString(mTime);
+        dest.writeString(mRepetition);
+        dest.writeString(mSoundPath);
+    }
+
+    public static final Parcelable.Creator CREATOR =
+            new Parcelable.Creator() {
+                public Alarms createFromParcel(Parcel in) {
+                    return new Alarms(in);
+                }
+
+                public Alarms[] newArray(int size) {
+                    return new Alarms[size];
+                }
+            };
 }

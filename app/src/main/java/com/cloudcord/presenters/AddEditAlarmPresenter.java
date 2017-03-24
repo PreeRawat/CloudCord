@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.widget.ArrayAdapter;
 
 import com.cloudcord.R;
+import com.cloudcord.datamodals.alarmservice.AlarmReceiver;
 import com.cloudcord.datamodals.localrepo.AlarmDataSource;
 import com.cloudcord.datamodals.modals.Alarms;
 import com.cloudcord.views.activities.AddEditAlarmActivity;
@@ -22,6 +23,7 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
     AddEditAlarmActivity mActivity;
 
     AlarmDataSource mAlarmDataSource;
+    AlarmReceiver mAlarmReceiver;
 
     ArrayAdapter<String> adapter;
     List<String> list;
@@ -42,14 +44,22 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
     @Override
     public void saveAlarm(int id, String title, String date, String time, String repetition, String soundPath) {
         System.out.println("alarm details : " + title + time + date + repetition);
-        if (!repetition.equalsIgnoreCase("Custom"))
+        Alarms newAlarm = new Alarms(id, title, date, time, repetition, soundPath);
+        if (!repetition.equalsIgnoreCase("Custom")) {
             // TODO: 23/3/17 Save to db and set reminder
-            saveToDb(id, title, date, time, repetition, soundPath);
+            saveToDb(newAlarm);
+            setAlarmNotification(newAlarm);
+        }
         //else
             // TODO: 23/3/17 open custom repetition dialog and overload saveAlarm with repetitions
             //openCustomRepetitionDialog();
 
 
+    }
+
+    private void setAlarmNotification(Alarms alarm) {
+        mAlarmReceiver = new AlarmReceiver();
+        mAlarmReceiver.setAlarm(mActivity, alarm);
     }
 
     @Override
@@ -59,14 +69,14 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
         mActivity.startActivityForResult(intent, PICKFILE_REQUEST_CODE);
     }
 
-    private void saveToDb(int id, String title, String date, String time, String repetition, String soundPath) {
-        Alarms newAlarm = new Alarms(id, title, date, time, repetition, soundPath);
-        System.out.println("alarm details : " + newAlarm.getmTitle());
+    private void saveToDb(Alarms alarm) {
+        //Alarms newAlarm = new Alarms(id, title, date, time, repetition, soundPath);
+        System.out.println("alarm details : " + alarm.getmTitle());
        /* if (newAlarm.isEmpty()) {
             mAddEditAlarmView.showEmptyAlarmError();
         } else {*/
 
-            mAlarmDataSource.saveAlarms(newAlarm);
+            mAlarmDataSource.saveAlarms(alarm);
 
             mAddEditAlarmView.showAlarmsList();
 
