@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -53,6 +54,8 @@
         </receiver>
 
         <service android:name=".datamodals.alarmservice.SchedulingService" />
+
+        <service android:name=".datamodals.alarmservice.MediaPlayerService" />
 
         <receiver android:name=".datamodals.alarmservice.SchedulingService$NotificationButton" />
     </application>

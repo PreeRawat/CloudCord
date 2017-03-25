@@ -25,6 +25,8 @@ import android.support.annotation.NonNull;
 import com.cloudcord.datamodals.modals.Alarms;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -150,6 +152,63 @@ public class AlarmLocalDataSource implements AlarmDataSource {
 
             db.close();
         }
+    }
+
+    @Override
+    public void getRepetitiveAlarms(@NonNull LoadAlarmsCallback callback) {
+        List<Alarms> alarms = new ArrayList<Alarms>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String[] projection = {
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TITLE,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DATE,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TIME,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION,
+                AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH
+        };
+
+        Cursor c = db.query(
+                AlarmPersistenceContract.AlarmEntry.TABLE_NAME, projection, null, null, null, null, null);
+
+        if (c != null && c.getCount() > 0) {
+            while (c.moveToNext()) {
+                int id = c.getInt(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_ENTRY_ID));
+                String title = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TITLE));
+                String date =
+                        c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_DATE));
+                String time = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_TIME));
+                String repetition = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION));
+                String soundPath = c.getString(c.getColumnIndexOrThrow(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH));
+
+                Date parsedDate = new Date(Integer.parseInt(date.split("-")[0]), Integer.parseInt(date.split("-")[1]), Integer.parseInt(date.split("-")[2]));
+                int hour = Integer.parseInt(time.split(":")[0]);
+                int minute = Integer.parseInt(time.split(":")[1]);
+                Calendar parsedAlarm = Calendar.getInstance();
+                parsedAlarm.set(parsedDate.getYear(), parsedDate.getMonth(), parsedDate.getDate(), hour, minute );
+
+                Calendar currentTime = Calendar.getInstance();
+                Alarms alarm = new Alarms(id, title, date, time, repetition, soundPath);
+
+                if(repetition.equalsIgnoreCase("does not repeat") && currentTime.before(parsedAlarm))
+                    alarms.add(alarm);
+                else if(!repetition.equalsIgnoreCase("does not repeat"))
+                    alarms.add(alarm);
+            }
+        }
+        if (c != null) {
+            c.close();
+        }
+
+        db.close();
+
+        if (alarms.isEmpty()) {
+            // This will be called if the table is new or just empty.
+            callback.onDataNotAvailable();
+        } else {
+            callback.onAlarmsLoaded(alarms);
+        }
+
     }
 
 /*    @Override

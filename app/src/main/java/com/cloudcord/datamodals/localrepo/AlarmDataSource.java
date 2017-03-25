@@ -62,6 +62,8 @@ public interface AlarmDataSource {
 
     void clearCompletedAlarms();*/
 
+    void getRepetitiveAlarms(@NonNull LoadAlarmsCallback callback);
+
     void refreshAlarms();
 
     void deleteAllAlarms();
