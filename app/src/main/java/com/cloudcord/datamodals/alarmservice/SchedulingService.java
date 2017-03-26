@@ -29,6 +29,7 @@ public class SchedulingService extends IntentService {
 	NotificationCompat.Builder builder;
 	public Intent startPlayback;
 	private static final String ACTION_PLAY = "com.example.action.PLAY";
+    private static final String ACTION_STOP = "com.example.action.STOP";
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -57,11 +58,21 @@ public class SchedulingService extends IntentService {
 				R.layout.remote_notification);
 
 		Intent snoozeIntent = new Intent(this, NotificationButton.class);
+        Bundle bundle =new Bundle();
+        bundle.putParcelable("alarm",alert);
+        snoozeIntent.putExtras(bundle);
+        snoozeIntent.putExtra("button","snooze");
 		PendingIntent pendingSnoozeIntent = PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+
+        Intent stopIntent = new Intent(getApplicationContext(), MediaPlayerService.class);
+        stopIntent.putExtra("button","stop");
+        stopIntent.setAction(ACTION_STOP);
+        PendingIntent pendingStopIntent = PendingIntent.getBroadcast(this, 0, stopIntent, 0);
+
 
 
 		notificationView.setOnClickPendingIntent(R.id.snooze, pendingSnoozeIntent);
-		notificationView.setOnClickPendingIntent(R.id.stop, pendingIntent);
+		notificationView.setOnClickPendingIntent(R.id.stop, pendingStopIntent);
 
 		Notification notification = new Notification(android.R.drawable.ic_btn_speak_now, null,
 				System.currentTimeMillis());
@@ -74,6 +85,7 @@ public class SchedulingService extends IntentService {
 
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, notification);
+
 
 		/*if (alertType.equalsIgnoreCase("PhotoLog")) {
 
@@ -128,18 +140,25 @@ public class SchedulingService extends IntentService {
 	public static class NotificationButton extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			
+            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 			if(intent.getStringExtra("button").equalsIgnoreCase("snooze")) {
-				Log.d("TAG", "test"); // TODO: 24/3/17 set alarm after 5 mins
-				restartInSometime();
+				Log.d("TAG", "test start in 5 mins"); // TODO: 24/3/17 set alarm after 5 mins
+
+				restartInSometime(context, (Alarms) intent.getExtras().getParcelable("alarm"));
+
+
 			} else {
 				// TODO: 24/3/17 stop the alarm
-
+                PendingIntent pStopSelf = PendingIntent.getService(context, 0, intent,0);
 				//context.getApplicationContext().stopService();
 			}
+            notificationManager.cancel(((Alarms) intent.getExtras().getParcelable("alarm")).getmId());
 		}
 
-		private void restartInSometime() {
+		private void restartInSometime(Context context, Alarms alarms) {
+            AlarmReceiver alarmReceiver = new AlarmReceiver();
+
+           // alarmReceiver.setAlarm(context, alarms);
 		}
 
 	}

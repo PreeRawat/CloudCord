@@ -25,6 +25,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
             System.out.println("preparing media");
             mMediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(intent.getStringExtra("sound")));
             mMediaPlayer.setOnPreparedListener(this);
+        } else {
+            stopSelf();
         }
         return START_STICKY;
     }
