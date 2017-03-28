@@ -134,7 +134,8 @@ public class AlarmLocalDataSource implements AlarmDataSource {
     }
 
     @Override
-    public void saveAlarms(@NonNull Alarms alarm) {
+    public long saveAlarms(@NonNull Alarms alarm) {
+        long id = -1;
         if(alarm != null) {
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -148,10 +149,12 @@ public class AlarmLocalDataSource implements AlarmDataSource {
             values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_REPETITION, alarm.getmRepetition());
             values.put(AlarmPersistenceContract.AlarmEntry.COLUMN_NAME_SOUNDPATH, alarm.getmSoundPath());
 
-            db.insert(AlarmPersistenceContract.AlarmEntry.TABLE_NAME, null, values);
+            id= db.insert(AlarmPersistenceContract.AlarmEntry.TABLE_NAME, null, values);
 
             db.close();
+
         }
+        return id;
     }
 
     @Override

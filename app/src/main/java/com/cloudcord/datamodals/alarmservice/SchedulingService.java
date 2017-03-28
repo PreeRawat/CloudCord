@@ -27,9 +27,7 @@ public class SchedulingService extends IntentService {
 	public static int NOTIFICATION_ID;
 
 	NotificationCompat.Builder builder;
-	public Intent startPlayback;
-	private static final String ACTION_PLAY = "com.example.action.PLAY";
-    private static final String ACTION_STOP = "com.example.action.STOP";
+	private static final String ACTION_PLAY = "com.cloudcord.action.PLAY";
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -44,12 +42,37 @@ public class SchedulingService extends IntentService {
 
 	private void sendAlert(Alarms alert) {
 		// TODO Auto-generated method stub
+		/*Intent notificationIntent = new Intent(this, AlarmActivity.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-		startPlayback= new Intent(getApplicationContext(), MediaPlayerService.class).setAction(ACTION_PLAY);
-		startPlayback.putExtra("sound", alert.getmSoundPath());
+		Intent snoozeIntent = new Intent(this, NotificationButton.class);
+		Bundle bundle =new Bundle();
+		bundle.putParcelable("alarm",alert);
+		snoozeIntent.putExtras(bundle);
+		snoozeIntent.putExtra("button","snooze");
+
+		PendingIntent pendingSnoozeIntent = PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
+
+		Notification notification = new Notification.Builder(this)
+*//*				.addAction(android.R.drawable.ic_btn_speak_now,"Snooze",pendingSnoozeIntent)
+				.addAction(android.R.drawable.ic_menu_close_clear_cancel,"Dismiss",pendingSnoozeIntent)*//*
+				.setContentTitle("Cloud Cord")
+				.setContentText("helo")
+				.setSmallIcon(android.R.drawable.ic_btn_speak_now)
+				.setContentIntent(pendingIntent)
+				.setTicker("new notification")
+				.build();
+
+		NOTIFICATION_ID = 756;
+
+		startForeground(NOTIFICATION_ID, notification);*/
+
+		Intent startPlayback= new Intent(getApplicationContext(), MediaPlayerService.class).setAction(ACTION_PLAY);
+		startPlayback.putExtra("alert", alert);
+		//startPlayback.putExtra("sound", alert.getmSoundPath());
 		getApplicationContext().startService(startPlayback);
 
-		Intent intent = new Intent(SchedulingService.this,
+		/*Intent intent = new Intent(SchedulingService.this,
 				AlarmActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
 				intent, 0);
@@ -64,10 +87,13 @@ public class SchedulingService extends IntentService {
         snoozeIntent.putExtra("button","snooze");
 		PendingIntent pendingSnoozeIntent = PendingIntent.getBroadcast(this, 0, snoozeIntent, 0);
 
-        Intent stopIntent = new Intent(getApplicationContext(), MediaPlayerService.class);
+        Intent stopIntent = new Intent(getApplicationContext(), NotificationButton.class);
         stopIntent.putExtra("button","stop");
+		Bundle bundle1 = new Bundle();
+		bundle1.putParcelable("alarm",alert);
+		stopIntent.putExtras(bundle1);
         stopIntent.setAction(ACTION_STOP);
-        PendingIntent pendingStopIntent = PendingIntent.getBroadcast(this, 0, stopIntent, 0);
+        PendingIntent pendingStopIntent = PendingIntent.getService(this, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
 
@@ -84,7 +110,7 @@ public class SchedulingService extends IntentService {
 
 
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		notificationManager.notify(NOTIFICATION_ID, notification);
+		notificationManager.notify(NOTIFICATION_ID, notification);*/
 
 
 		/*if (alertType.equalsIgnoreCase("PhotoLog")) {
@@ -142,24 +168,25 @@ public class SchedulingService extends IntentService {
 		public void onReceive(Context context, Intent intent) {
             NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 			if(intent.getStringExtra("button").equalsIgnoreCase("snooze")) {
-				Log.d("TAG", "test start in 5 mins"); // TODO: 24/3/17 set alarm after 5 mins
 
-				restartInSometime(context, (Alarms) intent.getExtras().getParcelable("alarm"));
 
 
 			} else {
 				// TODO: 24/3/17 stop the alarm
-                PendingIntent pStopSelf = PendingIntent.getService(context, 0, intent,0);
+				//context.stopService(intent);
+				System.out.println("Worked ");
+				/*Intent stopPlayback= new Intent(context, MediaPlayerService.class).setAction(ACTION_STOP);
+
+				context.startService(stopPlayback);*/
+				//PendingIntent pStopSelf = PendingIntent.getService(context, 0, new Intent(context, MediaPlayerService.class),PendingIntent.FLAG_UPDATE_CURRENT);
+				/*pStopSelf.cancel();*/
 				//context.getApplicationContext().stopService();
 			}
+
             notificationManager.cancel(((Alarms) intent.getExtras().getParcelable("alarm")).getmId());
 		}
 
-		private void restartInSometime(Context context, Alarms alarms) {
-            AlarmReceiver alarmReceiver = new AlarmReceiver();
 
-           // alarmReceiver.setAlarm(context, alarms);
-		}
 
 	}
 

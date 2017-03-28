@@ -2,6 +2,7 @@ package com.cloudcord.presenters;
 
 import android.content.Intent;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.cloudcord.R;
 import com.cloudcord.datamodals.alarmservice.AlarmReceiver;
@@ -47,8 +48,15 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
         Alarms newAlarm = new Alarms(id, title, date, time, repetition, soundPath);
         if (!repetition.equalsIgnoreCase("Custom")) {
             // TODO: 23/3/17 Save to db and set reminder
-            saveToDb(newAlarm);
-            setAlarmNotification(newAlarm);
+            int mId = (int) saveToDb(newAlarm);
+            System.out.println("id "+mId);
+            if (mId!=-1) {
+                newAlarm.setmId(mId);
+                setAlarmNotification(newAlarm);
+            } else {
+                Toast.makeText(mActivity, "Alarm could not be set.", Toast.LENGTH_SHORT).show();
+            }
+            mAddEditAlarmView.showAlarmsList();
         }
         //else
             // TODO: 23/3/17 open custom repetition dialog and overload saveAlarm with repetitions
@@ -69,16 +77,16 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
         mActivity.startActivityForResult(intent, PICKFILE_REQUEST_CODE);
     }
 
-    private void saveToDb(Alarms alarm) {
+    private long saveToDb(Alarms alarm) {
         //Alarms newAlarm = new Alarms(id, title, date, time, repetition, soundPath);
         System.out.println("alarm details : " + alarm.getmTitle());
        /* if (newAlarm.isEmpty()) {
             mAddEditAlarmView.showEmptyAlarmError();
         } else {*/
 
-            mAlarmDataSource.saveAlarms(alarm);
+            return mAlarmDataSource.saveAlarms(alarm);
 
-            mAddEditAlarmView.showAlarmsList();
+           //
 
         //}
     }

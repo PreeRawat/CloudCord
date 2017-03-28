@@ -50,7 +50,7 @@ public interface AlarmDataSource {
 
     void getAlarms(@NonNull String alarmId, @NonNull GetAlarmsCallback callback);
 
-    void saveAlarms(@NonNull Alarms alarm);
+    long saveAlarms(@NonNull Alarms alarm);
 
     /*void completeAlarms(@NonNull Alarms alarm);
 
