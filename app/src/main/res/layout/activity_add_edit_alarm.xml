@@ -36,7 +36,8 @@
 
                 <EditText
                     android:id="@+id/ettitle"
-                    android:layout_marginTop="95dp"
+                    android:layout_marginTop="90dp"
+                    android:textSize="26sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"

@@ -39,9 +39,9 @@ public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_alarm);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle("");*/
 
         alarmDataSource = CloudCordApplication.getDatabaseInstance();
         mPresenter = new AddEditAlarmPresenter(this, this, alarmDataSource);

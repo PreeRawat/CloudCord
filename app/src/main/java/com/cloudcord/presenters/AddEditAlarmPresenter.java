@@ -73,7 +73,7 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
     @Override
     public void pickMediaFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*");
+        intent.setType("audio/*");
         mActivity.startActivityForResult(intent, PICKFILE_REQUEST_CODE);
     }
 
