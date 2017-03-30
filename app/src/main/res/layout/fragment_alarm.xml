@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cloudcord.views.fragments.AlarmActivityFragment"
-    tools:showIn="@layout/activity_alarm">
+    tools:context="com.cloudcord.views.fragments.AlarmActivityFragment">
 
     <TextView
         android:id="@+id/empty_state"
@@ -13,18 +12,12 @@
         android:layout_height="wrap_content"
         android:text="no Cords yet...\ntap the bottom button to add.."
         android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_alarms"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteY="0dp"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="8dp"></android.support.v7.widget.RecyclerView>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.cloudcord.views.fragments;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ public class AlarmActivityFragment extends Fragment implements AlarmContract.Vie
     public AlarmActivityFragment() {
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -47,6 +49,7 @@ public class AlarmActivityFragment extends Fragment implements AlarmContract.Vie
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mListAdapter = new AlarmAdapter(new ArrayList<Alarms>(0), mItemListener);
+
     }
 
     @Override
@@ -57,6 +60,7 @@ public class AlarmActivityFragment extends Fragment implements AlarmContract.Vie
 
         recyclerViewAlarms = (RecyclerView) view.findViewById(R.id.rv_alarms);
         recyclerViewAlarms.setAdapter(mListAdapter);
+        recyclerViewAlarms.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         textViewEmptyState = (TextView) view.findViewById(R.id.empty_state);
 
@@ -80,17 +84,23 @@ public class AlarmActivityFragment extends Fragment implements AlarmContract.Vie
 
     @Override
     public void showEmptyState(boolean show) {
-        if (show) textViewEmptyState.setVisibility(View.VISIBLE);
-        else textViewEmptyState.setVisibility(View.GONE);
+        if (show) {
+            textViewEmptyState.setVisibility(View.VISIBLE);
+            recyclerViewAlarms.setVisibility(View.GONE);
+        } else {
+            textViewEmptyState.setVisibility(View.GONE);
+            recyclerViewAlarms.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void setList(List<Alarms> dataList) {
         setListDataOnView(dataList);
+
     }
 
     private void setListDataOnView(List<Alarms> dataList) {
-        if(dataList!=null) {
+        if (dataList != null) {
             mListAdapter.updateListData(dataList);
             recyclerViewAlarms.setVisibility(View.VISIBLE);
             showEmptyState(false);

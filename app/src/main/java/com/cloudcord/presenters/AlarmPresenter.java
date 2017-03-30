@@ -16,7 +16,7 @@ import java.util.List;
  * Created by root on 21/3/17.
  */
 
-public class AlarmPresenter implements AlarmContract.Presenter {
+public final class AlarmPresenter implements AlarmContract.Presenter {
 
     AlarmActivity mAlarmActivity;
     AlarmContract.View mAlarmActivityFragment;
@@ -33,7 +33,7 @@ public class AlarmPresenter implements AlarmContract.Presenter {
 
     @Override
     public void start() {
-
+        getAlarmsList();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class AlarmPresenter implements AlarmContract.Presenter {
 
             @Override
             public void onDataNotAvailable() {
-
+                System.out.println("Data no available.");
             }
         });
     }

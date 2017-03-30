@@ -41,6 +41,7 @@ public class AlarmActivity extends AppCompatActivity {
         mAlarmDataSource = CloudCordApplication.getDatabaseInstance();
 
         mPresenter = new AlarmPresenter(this, alarmActivityFragment, mAlarmDataSource);
+        alarmActivityFragment.setPresenter(mPresenter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
