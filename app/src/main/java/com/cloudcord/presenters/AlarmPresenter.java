@@ -16,7 +16,7 @@ import java.util.List;
  * Created by root on 21/3/17.
  */
 
-public final class AlarmPresenter implements AlarmContract.Presenter {
+public class AlarmPresenter implements AlarmContract.Presenter {
 
     AlarmActivity mAlarmActivity;
     AlarmContract.View mAlarmActivityFragment;

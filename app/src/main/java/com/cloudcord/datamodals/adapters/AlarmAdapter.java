@@ -1,18 +1,19 @@
 package com.cloudcord.datamodals.adapters;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.cloudcord.R;
 import com.cloudcord.datamodals.modals.Alarms;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,47 +24,54 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
 
     private List<Alarms> mAlarms;
     private AlarmItemListener mItemListener;
+    private FragmentActivity activity;
 
-    public AlarmAdapter(ArrayList<Alarms> alarms, AlarmItemListener mItemListener) {
-
+    public AlarmAdapter(ArrayList<Alarms> alarms, AlarmItemListener mItemListener, FragmentActivity activity) {
+        this.activity = activity;
         this.mAlarms = alarms;
         this.mItemListener = mItemListener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rowView = parent;
-        if (rowView == null) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            rowView = inflater.inflate(R.layout.alarm_item, parent, false);
-        }
-
-        ViewHolder viewHolder = new ViewHolder(rowView);
-        return viewHolder;
-        /*View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.alarm_item, parent, false);
-        return new ViewHolder(v);*/
-
+    public AlarmAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.alarm_item, parent, false);
+        return new ViewHolder(v);
     }
 
+    @Override
+    public void onBindViewHolder(AlarmAdapter.ViewHolder holder, int position) {
+        holder.time.setText(mAlarms.get(position).getmTime());
+        holder.date.setText(mAlarms.get(position).getmDate());
+        holder.soundName.setText(prettySound(mAlarms.get(position).getmSoundPath()));
+        holder.title.setText(mAlarms.get(position).getmTitle());
+        //prettySound(mAlarms.get(position).getmSoundPath());
+        prettyDate(mAlarms.get(position).getmDate());
+    }
 
     public void updateListData(List<Alarms> alarms) {
-        //if(alarms!=null) {
+        if (alarms != null) {
             mAlarms = alarms;
-        System.out.println(" asdfsdf: "+ mAlarms.size());
             notifyDataSetChanged();
-        //}
+        }
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Alarms item = mAlarms.get(position);
-        holder.timeTextView.setText(item.getmTime());
-        System.out.println(" binding: "+item.getmTime());
+    public String prettySound(String soundPath){
+        if(soundPath!=null && !soundPath.equals("")) {
+            soundPath = soundPath.substring(soundPath.lastIndexOf("/")+1);
+            soundPath = soundPath.replace("%20"," ");
+            return soundPath;
+        } else return "NA";
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
+    public String prettyDate(String date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E MM dd");
+        dateFormat.format(new Date());
+        return "";
+    }
+
+    public String prettyTime(Calendar date){
+        return "";
     }
 
     @Override
@@ -71,22 +79,19 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         return mAlarms.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // Your holder should contain a member variable
-        // for any view that will be set as you render a row
-        public TextView timeTextView;
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
+        TextView time, date, soundName, title;
+
         public ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
-
-            timeTextView = (TextView) itemView.findViewById(R.id.time);
-            //messageButton = (Button) itemView.findViewById(R.id.message_button);
+            time = (TextView) itemView.findViewById(R.id.itemtime);
+            date = (TextView) itemView.findViewById(R.id.date);
+            soundName = (TextView) itemView.findViewById(R.id.sound_name);
+            title = (TextView) itemView.findViewById(R.id.title);
         }
     }
+
 
     public interface AlarmItemListener {
 

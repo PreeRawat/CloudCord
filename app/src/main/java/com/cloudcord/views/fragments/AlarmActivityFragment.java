@@ -48,7 +48,7 @@ public class AlarmActivityFragment extends Fragment implements AlarmContract.Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new AlarmAdapter(new ArrayList<Alarms>(0), mItemListener);
+        mListAdapter = new AlarmAdapter(new ArrayList<Alarms>(0), mItemListener, getActivity());
 
     }
 
