@@ -8,6 +8,7 @@ import com.cloudcord.CloudCordApplication;
 import com.cloudcord.datamodals.localrepo.AlarmDataSource;
 import com.cloudcord.datamodals.modals.Alarms;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -42,7 +43,11 @@ public class BootReceiver extends BroadcastReceiver implements AlarmDataSource.L
     @Override
     public void onAlarmsLoaded(List<Alarms> alarms) {
         for (Alarms futureAlarm: alarms) {
-            alarm.setAlarm(context, futureAlarm);
+            try {
+                alarm.setAlarm(context, futureAlarm);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
     }

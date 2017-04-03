@@ -15,6 +15,8 @@ import android.util.Log;
 
 import com.cloudcord.datamodals.modals.Alarms;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -38,14 +40,18 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 		startWakefulService(context, service);
 	}
 
-	public void setAlarm(Context context, Alarms alarm) {
+	public void setAlarm(Context context, Alarms alarm) throws ParseException {
 		Log.i("got", "call to alarm receiver");
-
-		Date date = new Date(Integer.parseInt(alarm.getmDate().split("-")[0]), Integer.parseInt(alarm.getmDate().split("-")[1]), Integer.parseInt(alarm.getmDate().split("-")[2]));
-		int hour = Integer.parseInt(alarm.getmTime().split(":")[0]);
-		int minute = Integer.parseInt(alarm.getmTime().split(":")[1]);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
+		Date date = dateFormat.parse(alarm.getmDate());
+		System.out.println("date" +date.getYear()+ date.getMonth()+ date.getDate());
+		SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+		Date time = timeFormat.parse(alarm.getmTime());
+		/*int hour = Integer.parseInt(alarm.getmTime().split(":")[0]);
+		int minute = Integer.parseInt(alarm.getmTime().split(":")[1].substring(0,2));
+		*/System.out.println("time " +time.getHours()+ " " +time.getMinutes());
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(date.getYear(), date.getMonth(), date.getDate(), hour, minute );
+		calendar.set(date.getYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes() );
 
 		mAlarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);

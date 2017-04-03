@@ -23,6 +23,11 @@ import com.cloudcord.presenters.AddEditAlarmPresenter;
 import com.cloudcord.utils.DateTimePickers;
 import com.cloudcord.utils.Interactor;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 
 public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAlarmContract.View, Interactor {
 
@@ -121,7 +126,7 @@ public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAl
     public void getTime(int hour, int minute) {
         if (!(hour == 0 && minute == 0)) {
             this.mTime = hour + ":" + minute;
-            time.setText(mTime);
+            time.setText(prettyTime(mTime));
         } else time.setText("");
     }
 
@@ -130,8 +135,33 @@ public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAl
     public void getDate(int year, int month, int day) {
         if (!(year == 0 && month == 0 && day == 0)) {
             this.mDate = year + "-" + month + "-" + day;
-            date.setText(mDate);
+            date.setText(prettyDate(mDate));
         } else date.setText("");
+    }
+
+    public String prettyDate(String date) {
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date input = null;
+        try {
+            input = inputFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
+        return dateFormat.format(input);
+    }
+
+
+    public String prettyTime(String time){
+        DateFormat inputFormat = new SimpleDateFormat("hh:mm");
+        Date input = null;
+        try {
+            input = inputFormat.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+        return timeFormat.format(input);
     }
 
 

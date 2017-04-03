@@ -10,6 +10,7 @@ import com.cloudcord.datamodals.localrepo.AlarmDataSource;
 import com.cloudcord.datamodals.modals.Alarms;
 import com.cloudcord.views.activities.AddEditAlarmActivity;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +50,8 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
         if (!repetition.equalsIgnoreCase("Custom")) {
             // TODO: 23/3/17 Save to db and set reminder
             int mId = (int) saveToDb(newAlarm);
-            System.out.println("id "+mId);
-            if (mId!=-1) {
+            System.out.println("id " + mId);
+            if (mId != -1) {
                 newAlarm.setmId(mId);
                 setAlarmNotification(newAlarm);
             } else {
@@ -59,15 +60,19 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
             mAddEditAlarmView.showAlarmsList();
         }
         //else
-            // TODO: 23/3/17 open custom repetition dialog and overload saveAlarm with repetitions
-            //openCustomRepetitionDialog();
+        // TODO: 23/3/17 open custom repetition dialog and overload saveAlarm with repetitions
+        //openCustomRepetitionDialog();
 
 
     }
 
     private void setAlarmNotification(Alarms alarm) {
         mAlarmReceiver = new AlarmReceiver();
-        mAlarmReceiver.setAlarm(mActivity, alarm);
+        try {
+            mAlarmReceiver.setAlarm(mActivity, alarm);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -84,9 +89,9 @@ public class AddEditAlarmPresenter implements AddEditAlarmContract.Presenter {
             mAddEditAlarmView.showEmptyAlarmError();
         } else {*/
 
-            return mAlarmDataSource.saveAlarms(alarm);
+        return mAlarmDataSource.saveAlarms(alarm);
 
-           //
+        //
 
         //}
     }

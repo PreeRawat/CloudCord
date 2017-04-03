@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.cloudcord.R;
 import com.cloudcord.datamodals.modals.Alarms;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,8 +47,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
         holder.date.setText(mAlarms.get(position).getmDate());
         holder.soundName.setText(prettySound(mAlarms.get(position).getmSoundPath()));
         holder.title.setText(mAlarms.get(position).getmTitle());
-        //prettySound(mAlarms.get(position).getmSoundPath());
-        prettyDate(mAlarms.get(position).getmDate());
+
     }
 
     public void updateListData(List<Alarms> alarms) {
@@ -62,16 +63,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.ViewHolder> 
             soundPath = soundPath.replace("%20"," ");
             return soundPath;
         } else return "NA";
-    }
-
-    public String prettyDate(String date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("E MM dd");
-        dateFormat.format(new Date());
-        return "";
-    }
-
-    public String prettyTime(Calendar date){
-        return "";
     }
 
     @Override

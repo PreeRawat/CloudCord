@@ -12,6 +12,11 @@ import com.cloudcord.R;
 import com.cloudcord.presenters.LoginContract;
 import com.cloudcord.presenters.LoginPresenter;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LoginActivity extends AppCompatActivity implements LoginContract.View {
 
     private Button btnLogin;
@@ -35,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         });
 
     }
+
 
     @Override
     protected Dialog onCreateDialog(int id, Bundle data) {

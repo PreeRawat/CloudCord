@@ -31,31 +31,42 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        Alarms alarm = intent.getParcelableExtra("alert");
-        if (intent.getAction().equals(ACTION_PLAY)) {
-            System.out.println("preparing media");
-            //Alarms alarm = (Alarms)intent.getParcelableExtra("alert");
-            showNotification(alarm);
-            mMediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(alarm.getmSoundPath()));
-            mMediaPlayer.setOnPreparedListener(this);
+        Alarms alarm = null;
+        if(intent.hasExtra("alert")) {
+            alarm = intent.getParcelableExtra("alert");
 
-        } else  {
-            Log.d("TAG", "test start in 5 mins"); // TODO: 24/3/17 set alarm after 5 mins
-            if(intent.getAction().equals(ACTION_SNOOZE))
-                restartInSometime(getApplicationContext(), alarm);
-            stopForeground(true);
-            stopSelf(alarm.getmId());
-        } /*else if (intent.getAction().equals(ACTION_DISMISS)){
+            if (intent.getAction().equals(ACTION_PLAY)) {
+                System.out.println("preparing media");
+                //Alarms alarm = (Alarms)intent.getParcelableExtra("alert");
+                showNotification(alarm);
+                mMediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(alarm.getmSoundPath()));
+                mMediaPlayer.setOnPreparedListener(this);
+
+            } else {
+                Log.d("TAG", "test start in 5 mins"); // TODO: 24/3/17 set alarm after 5 mins
+                if (intent.getAction().equals(ACTION_SNOOZE))
+                    restartInSometime(getApplicationContext(), alarm);
+                stopForeground(true);
+                mMediaPlayer.stop();
+                stopService(intent);
+
+                //stopSelf(alarm.getmId());
+            } /*else if (intent.getAction().equals(ACTION_DISMISS)){
             stopForeground(true);
             stopSelf(alarm.getmId());
         }*/
+        }
         return START_STICKY;
+
     }
+
+
     private void restartInSometime(Context context, Alarms alarms) {
         AlarmReceiver alarmReceiver = new AlarmReceiver();
 
         // alarmReceiver.setAlarm(context, alarms);
     }
+
 
     private void showNotification(Alarms alarm) {
         Intent notificationIntent = new Intent(this, AlarmActivity.class);
