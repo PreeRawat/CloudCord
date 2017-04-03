@@ -147,7 +147,7 @@ public class AddEditAlarmActivity extends AppCompatActivity implements AddEditAl
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
         return dateFormat.format(input);
     }
 

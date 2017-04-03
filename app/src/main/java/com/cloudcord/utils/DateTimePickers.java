@@ -82,7 +82,7 @@ public class DateTimePickers {
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+            int day = c.get(Calendar.DATE);
 
             // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), this, year, month, day);
@@ -90,7 +90,8 @@ public class DateTimePickers {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            mInteractor.getDate(year, month, day);
+            System.out.println("picker "+year+" "+(month+1)+ " "+day);
+            mInteractor.getDate(year, month+1, day);
         }
 
         @Override

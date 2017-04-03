@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.IBinder;
@@ -16,6 +17,11 @@ import android.util.Log;
 import com.cloudcord.datamodals.modals.Alarms;
 import com.cloudcord.views.activities.AlarmActivity;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by root on 24/3/17.
  */
@@ -25,6 +31,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
     private static final String ACTION_PLAY = "com.cloudcord.action.PLAY";
     private static final String ACTION_SNOOZE = "com.cloudcord.action.SNOOZE";
     private static final String ACTION_DISMISS = "com.cloudcord.action.DISMISS";
+    static final long ONE_MINUTE_IN_MILLIS=60000;//millisecs
 
         MediaPlayer mMediaPlayer = null;
 
@@ -40,6 +47,7 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                 //Alarms alarm = (Alarms)intent.getParcelableExtra("alert");
                 showNotification(alarm);
                 mMediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(alarm.getmSoundPath()));
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setOnPreparedListener(this);
 
             } else {
@@ -48,6 +56,8 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
                     restartInSometime(getApplicationContext(), alarm);
                 stopForeground(true);
                 mMediaPlayer.stop();
+                mMediaPlayer.reset();
+                mMediaPlayer.release();
                 stopService(intent);
 
                 //stopSelf(alarm.getmId());
@@ -63,8 +73,42 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
 
     private void restartInSometime(Context context, Alarms alarms) {
         AlarmReceiver alarmReceiver = new AlarmReceiver();
+        Date newDate = new Date(System.currentTimeMillis()+2*60*1000);
+        String date = prettyDate((newDate.getYear()+1900)+"-"+(newDate.getMonth()+1)+"-"+newDate.getDate());
+        String time = prettyTime(newDate.getHours()+":"+newDate.getMinutes());
 
-        // alarmReceiver.setAlarm(context, alarms);
+        System.out.println("Time "+newDate.getHours()+":"+newDate.getMinutes()+" date "+date);
+        Alarms newAlarm = new Alarms(alarms.getmId(), alarms.getmTitle(), date, time, alarms.getmRepetition(), alarms.getmSoundPath());
+        try {
+            alarmReceiver.setAlarm(context, newAlarm);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String prettyDate(String date) {
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date input = null;
+        try {
+            input = inputFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
+        return dateFormat.format(input);
+    }
+
+
+    public String prettyTime(String time){
+        DateFormat inputFormat = new SimpleDateFormat("hh:mm");
+        Date input = null;
+        try {
+            input = inputFormat.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+        return timeFormat.format(input);
     }
 
 
@@ -86,13 +130,13 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnPrepare
         stopIntent.putExtra("alert",alarm);
         stopIntent.setAction(ACTION_DISMISS);
         PendingIntent pdismissIntent = PendingIntent.getService(this, 0,
-                stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                stopIntent, 0);
 
 
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("TutorialsFace Music Player")
-                .setTicker("TutorialsFace Music Player")
-                .setContentText("My song")
+                .setContentTitle("Cloud Cord")
+                .setTicker("Cloud Cord playing")
+                .setContentText(alarm.getmTitle())
                 .setSmallIcon(android.R.drawable.ic_btn_speak_now)
                 //.setLargeIcon(android.R.drawable.sym_def_app_icon)
                 .setContentIntent(pendingIntent)

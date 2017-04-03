@@ -32,7 +32,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-
+		Log.i("got", "on Receive");
 		Alarms alarms = intent.getExtras().getParcelable("alarm");
 
 		Intent service = new Intent(context, SchedulingService.class);
@@ -42,16 +42,16 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
 	public void setAlarm(Context context, Alarms alarm) throws ParseException {
 		Log.i("got", "call to alarm receiver");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMM d, ''yy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
 		Date date = dateFormat.parse(alarm.getmDate());
-		System.out.println("date" +date.getYear()+ date.getMonth()+ date.getDate());
+		System.out.println("date " +(date.getYear()+1900)+ " "+ date.getMonth()+" "+ date.getDate());
 		SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
 		Date time = timeFormat.parse(alarm.getmTime());
 		/*int hour = Integer.parseInt(alarm.getmTime().split(":")[0]);
 		int minute = Integer.parseInt(alarm.getmTime().split(":")[1].substring(0,2));
 		*/System.out.println("time " +time.getHours()+ " " +time.getMinutes());
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(date.getYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes() );
+		calendar.set(date.getYear()+1900, date.getMonth(), date.getDate(), time.getHours(), time.getMinutes());
 
 		mAlarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);

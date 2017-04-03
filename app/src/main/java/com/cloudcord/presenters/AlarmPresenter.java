@@ -61,6 +61,7 @@ public class AlarmPresenter implements AlarmContract.Presenter {
 
             @Override
             public void onDataNotAvailable() {
+                mAlarmActivityFragment.showEmptyState(true);
                 System.out.println("Data no available.");
             }
         });
@@ -69,8 +70,6 @@ public class AlarmPresenter implements AlarmContract.Presenter {
     private void setListData(List<Alarms> alarms) {
         if(alarms.size()>0)
             mAlarmActivityFragment.setList(alarms);
-        else
-            mAlarmActivityFragment.showEmptyState(true);
     }
 
     @Override
